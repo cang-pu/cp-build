@@ -6,6 +6,7 @@
   "dependencies": {
     "chalk": "^1.0.0",
     "gulp": "^3.8.11",
+    "iconv-lite": "^0.4.7",
     "when": "^3.7.2"
   },
   "devDependencies": {},
