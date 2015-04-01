@@ -1,4 +1,5 @@
 {
 	"src": "./src",
-	"dest": "./bin"
+	"dest": "./bin",
+	"versionLength": 12
 }

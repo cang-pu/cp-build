@@ -22,42 +22,17 @@
  */
 
 (function(define) {
-    'use strict';
+	'use strict';
 
-    define(function(require) {
-        var utils = require('./utils');
-        var chalk = require('chalk');
-        var path = require('path');
-
-        function $() {};
-
-        $.version = 'none version';
-        //default option
-        $.opt = {
-            src: "./src",
-            dest: "./dist",
-            logStrRegexp: /\b\w{40}\b/img,
-            versionLength: 40
-        };
-
-        //Error handler
-        $.Error = function(err) {
-            console.log("\r\n", chalk.red.bold("Error : "), err, "\r\n");
-        }
-
-        //fire : change current context 
-        $.fire = utils.fire;
-        $.fireArgs = utils.fireArgs;
-
-        $.init = function() {
-            var opt = utils.readJSON($.configPath);
-            (!opt) && (opt = utils.readJSON(path.join(__dirname, "./../conf.js")));
-            utils.merge($.opt, opt);
-        };
-        return $;
-
-    });
-
+	define(function(require) {
+		var $ = global.$;
+		//get version string
+		var test = function() {
+			console.log('测试：');
+			console.log($.utils.md5('jklzt'));
+		}
+		return test;
+	});
 })(typeof define === 'function' && define.amd ? define : function(factory) {
-    module.exports = factory(require);
+	module.exports = factory(require);
 });
