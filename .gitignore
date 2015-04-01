@@ -1,6 +1,7 @@
 #folders
 
 .idea/
+bin/
 
 #files
 .version
