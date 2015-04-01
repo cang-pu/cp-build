@@ -1,8 +1,34 @@
+/****************************************************************************
+ Copyright (c) 2015 Jkl-zt.
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE SOFTWARE.
+ ****************************************************************************/
+/**
+ * Created by Jkl-zt on 2015/4/1.
+ * build-tools
+ */
+
+var $ = require('./lib/core');
+$.utils=require('./lib/utils');
+
+console.dir($.utils.readJSON('./conf.js'));
 var gulp = require('gulp');
 var when = require('when');
 var fs = require('fs');
 var path = require('path');
-var crypto = require('crypto');
 var chalk = require('chalk');
 var spawn = require('child_process').spawn;
 var exec = require('child_process').exec;
@@ -14,158 +40,6 @@ var option = {
 
 var $ = $ || {};
 $.version = 'none version';
-$.Error = function(err) {
-	console.log("\r\n",chalk.red.bold("Error : "), err,"\r\n");
-}
-$.Config = {
-	logStrRegexp: /\b\w{40}\b/img,
-	versionLength: 12
-};
-$.utils = {
-	//type
-	is: function(source, type) {
-		return toString.call(source) === '[object ' + type + ']';
-	},
-	//map
-	map: function(obj, callback, merge) {
-		var index = 0;
-		for (var key in obj) {
-			if (obj.hasOwnProperty(key)) {
-				if (merge) {
-					callback[key] = obj[key];
-				} else if (callback(key, obj[key], index++)) {
-					break;
-				}
-			}
-		}
-	},
-	pad: function(str, len, fill, pre) {
-		if (str.length < len) {
-			fill = (new Array(len)).join(fill || ' ');
-			if (pre) {
-				str = (fill + str).substr(-len);
-			} else {
-				str = (str + fill).substring(0, len);
-			}
-		}
-		return str;
-	},
-	merge: function(source, target) {
-		if (this.is(source, 'Object') && this.is(target, 'Object')) {
-			this.map(target, $.fire(this,function(key, value) {
-				source[key] = this.merge(source[key], value);
-			}));
-		} else {
-			source = target;
-		}
-		return source;
-	},
-	clone: function(source) {
-		var ret;
-		switch (toString.call(source)) {
-			case '[object Object]':
-				ret = {};
-				this.map(source, function(k, v) {
-					ret[k] = this.clone(v);
-				});
-				break;
-			case '[object Array]':
-				ret = [];
-				source.forEach(function(ele) {
-					ret.push(this.clone(ele));
-				});
-				break;
-			default:
-				ret = source;
-		}
-		return ret;
-	},
-	readJSON: function(path) {
-		var json = _.read(path),
-			result = {};
-		try {
-			result = JSON.parse(json);
-		} catch (e) {
-			fis.log.error('parse json file[' + path + '] fail, error [' + e.message + ']');
-		}
-		return result;
-	},
-	isEmpty: function(obj) {
-		if (obj === null) return true;
-		if (this.is(obj, 'Array')) return obj.length == 0;
-		for (var key in obj) {
-			if (obj.hasOwnProperty(key)) {
-				return false;
-			}
-		}
-		return true
-	},
-	md5: function(data, len) {
-		var md5sum = crypto.createHash('md5'),
-			encoding = typeof data === 'string' ? 'utf8' : 'binary';
-		md5sum.update(data, encoding);
-		//784a53ba6a627b20ccfcca4567eeb484
-		len = len || 32;
-		return md5sum.digest('hex').substring(0, len);
-	},
-	base64: function(data) {
-		if (data instanceof Buffer) {
-			//do nothing for quickly determining.
-		} else if (data instanceof Array) {
-			data = new Buffer(data);
-		} else {
-			//convert to string.
-			data = new Buffer(String(data || ''));
-		}
-		return data.toString('base64');
-	}
-};
-$.fire = function(scope, method) {
-	if (arguments.length > 2) {
-		return $.fireArgs.apply(this, arguments);
-	}
-	if (!method) {
-		method = scope;
-		scope = null;
-	}
-	if ($.utils.is(method,'String')) {
-		scope = scope || window;
-		if (!scope[method]) {
-			throw new Error('');
-		}
-		return function() {
-			return scope[method].apply(scope, arguments || []);
-		};
-	}
-	return !scope ? method : function() {
-		return method.apply(scope, arguments || []);
-	};
-};
-$.fireArgs = function(scope, method) {
-	var pre = Array.prototype.slice.call(arguments, 2);
-	var named = $.utils.is(method,'String');
-	return function() {
-		var args = Array.prototype.slice.call(arguments);
-		var f = named ? (scope || win)[method] : method;
-		return f && f.apply(scope || this, pre.concat(args)); // mixed
-	};
-};
-//清除生成的Bin文件夹
-$.utils.clearBin = function(from) {
-	var files = [];
-	if (fs.existsSync(from)) {
-		files = fs.readdirSync(from);
-		files.forEach(function(file, index) {
-			var curPath = from + "/" + file;
-			if (fs.statSync(curPath).isDirectory()) { // recurse
-				clearBin(curPath);
-			} else { // delete file
-				fs.unlinkSync(curPath);
-			}
-		});
-		fs.rmdirSync(from);
-	}
-}
 
 //get version string
 $.GetVersionString = function() {
@@ -177,15 +51,15 @@ $.GetVersionString = function() {
 	log.stdout.on('data', function(data) {
 		deferred.resolve(data.toString());
 	});
-	log.on('error',function(){
-		var err='\r\n\r\n'+
-				chalk.red.bold('SBSBSB ----------------------- SBSBSB')+'\r\n'+
-				chalk.red.bold('****** 请将Git加入系统环境变量 ******')+'\r\n'+
-				chalk.red.bold('****** 如果没有安装Git，请安装 ******')+'\r\n'+
-				chalk.red.bold('******                         ******')+'\r\n'+
-				chalk.red.bold('****** 还有，确保本项目处于git ******')+'\r\n'+
-				chalk.red.bold('****** 版本控制中              ******')+'\r\n'+
-				chalk.red.bold('SBSBSB ----------------------- SBSBSB');
+	log.on('error', function() {
+		var err = '\r\n\r\n' +
+			chalk.red.bold('SBSBSB ----------------------- SBSBSB') + '\r\n' +
+			chalk.red.bold('****** 请将Git加入系统环境变量 ******') + '\r\n' +
+			chalk.red.bold('****** 如果没有安装Git，请安装 ******') + '\r\n' +
+			chalk.red.bold('******                         ******') + '\r\n' +
+			chalk.red.bold('****** 还有，确保本项目处于git ******') + '\r\n' +
+			chalk.red.bold('****** 版本控制中              ******') + '\r\n' +
+			chalk.red.bold('SBSBSB ----------------------- SBSBSB');
 		deferred.reject(err);
 	});
 	log.on('close', function(code) {
@@ -218,7 +92,7 @@ gulp.task('clear', function() {
 gulp.task('src', function() {
 	console.log($.utils.md5('jklzt'));
 	$.Config = $.utils.merge($.Config, option);
-	console.log($.Config,global);
+	console.log($.Config, global);
 });
 gulp.task("default", function() {
 	var desc = "";
