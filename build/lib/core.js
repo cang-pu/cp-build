@@ -28,14 +28,14 @@
         var utils = require('./utils');
         var chalk = require('chalk');
         var path = require('path');
-
         function $() {};
-        $.debug=false;
+        $.utils=utils;
         $.version = 'none version';
         //default option
         $.opt = {
-            src: "./src",
-            dest: "./dist",
+            debug:false,
+            src: path.resolve('../project','src'),
+            bin: path.resolve('../project','bin'),
             logStrRegexp: /\b\w{40}\b/img,
             versionLength: 40
         };
@@ -50,9 +50,19 @@
         $.fireArgs = utils.fireArgs;
 
         $.init = function() {
+            //merge option
             var opt = utils.readJSON($.configPath);
             (!opt) && (opt = utils.readJSON(path.join(__dirname, "./../conf.js")));
             utils.merge($.opt, opt);
+
+            //is debug
+            $.debug = $.opt.debug;
+
+            //debug output
+            $.debug && (console.log(chalk.green.bold("\n调试模式开启\n")));
+            $.debug && (console.log(chalk.green.bold("配置信息：")));
+            $.debug && (console.log($.opt));
+            $.debug && (console.log(""));
         };
         return $;
 

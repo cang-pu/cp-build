@@ -1,0 +1,1 @@
+cd build && gulp ^%1 && cd ..

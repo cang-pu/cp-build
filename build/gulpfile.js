@@ -24,18 +24,20 @@
 var gulp = require('gulp');
 
 var $ = global.$ = require('./lib/core');
-$.utils = require('./lib/utils');
-$.getGitVersion = require('./lib/getGitVersion');
 
+//自定义opt
 $.configPath = require('path').join(__dirname, "./conf.js");
+
+//初始化操作
 $.init();
-$.debug=true;
+
 
 gulp.task('version', function() {
-	$.getGitVersion();
+	//加载获取GIT版本字符串
+	require('./lib/getGitVersion')();
 });
 gulp.task('clear', function() {
-	$.utils.clearBin('bin');
+	$.utils.clear($.opt.bin);
 });
 gulp.task('src', function() {
 

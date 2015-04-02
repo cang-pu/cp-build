@@ -396,7 +396,7 @@
 				}
 			},
 
-			clearBin: function(from) {
+			clear: function(from) {
 				var files = [];
 				if (fs.existsSync(from)) {
 					files = fs.readdirSync(from);

@@ -30,11 +30,11 @@
 
         function info() {
             var desc = "";
-            desc += chalk.blue.bgGreen.bold('请输入对应的命令执行任务：\r\n\r\n');
-            desc += "\t" + chalk.red.bgBlack('gulp dev') + "\t" + chalk.green.underline.bgBlack('启动开发Build监听\r\n');
-            desc += "\t" + chalk.red.bgBlack('gulp test') + "\t" + chalk.green.bgBlack.underline('启动测试Build监听\r\n');
-            desc += "\t" + chalk.red.bgBlack('gulp release') + "\t" + chalk.green.bgBlack.underline('启动发行Build监听\r\n');
-            desc += "\t" + chalk.green.bgBlack('gulp clear') + "\t" + chalk.green.bgBlack.underline('启动清理生成\r\n');
+            desc += chalk.yellow.bgBlack.bold('请输入对应的命令执行任务：\r\n\r\n');
+            desc += "\t" + chalk.red.bgBlack('dev') + "\t" + chalk.green.underline.bgBlack('启动开发Build监听\r\n');
+            desc += "\t" + chalk.red.bgBlack('test') + "\t" + chalk.green.bgBlack.underline('启动测试Build监听\r\n');
+            desc += "\t" + chalk.red.bgBlack('release') + "\t" + chalk.green.bgBlack.underline('启动发行Build监听\r\n');
+            desc += "\t" + chalk.red.bgBlack('clear') + "\t" + chalk.green.bgBlack.underline('启动清理生成\r\n');
             console.log(desc);
         }
         return info;

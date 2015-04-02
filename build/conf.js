@@ -1,5 +1,4 @@
 {
-	"src": "./src",
-	"dest": "./bin",
+	"debug":true,
 	"versionLength": 12
 }
