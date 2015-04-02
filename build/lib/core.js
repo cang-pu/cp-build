@@ -34,6 +34,7 @@
         //default option
         $.opt = {
             debug:false,
+            test:path.resolve('./','test/'),
             src: path.resolve('../project','src'),
             bin: path.resolve('../project','bin'),
             logStrRegexp: /\b\w{40}\b/img,

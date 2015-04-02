@@ -1,4 +1,4 @@
 {
 	"debug":true,
-	"versionLength": 12
+	"versionLength": 40
 }

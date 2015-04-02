@@ -26,10 +26,34 @@
 
 	define(function(require) {
 		var $ = global.$;
+		var chalk=require('chalk');
+		var log={
+			info:function(string){
+				console.log(chalk.green.bold(string));
+			},
+			warn:function(string){
+				console.log(chalk.yellow.bold(string));
+			},
+			error:function(string){
+				console.log(chalk.red.bold(string));
+			}
+		}
 		//get version string
 		var test = function() {
-			console.log('测试：');
-			console.log($.utils.md5('jklzt'));
+
+			var randomString=$.utils.randomString(40)
+
+			log.info('\n随机字符串：');
+			log.info('\t '+randomString);
+
+			log.info('\n将随机字符串进行MD5输出：');
+			log.info('\t'+$.utils.md5(randomString));
+
+			log.info('\n将随机字符串进行Base64输出：');
+			log.info('\t'+$.utils.base64(randomString));
+
+			
+
 		}
 		return test;
 	});

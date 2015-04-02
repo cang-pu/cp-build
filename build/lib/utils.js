@@ -306,6 +306,11 @@
 				}
 				return true;
 			},
+			randomString: function(length) {
+				var lth;
+				(this.is(length, 'Number')) ? (lth = length / 2) : (lth = 16)
+				return crypto.randomBytes(lth).toString('hex');
+			},
 			fire: function(scope, method) {
 				if (arguments.length > 2) {
 					return this.fireArgs.apply(this, arguments);
@@ -409,6 +414,20 @@
 						}
 					});
 					fs.rmdirSync(from);
+				}
+			},
+
+			write: function(path, data, charset, append) {
+				if (!_exists(path)) {
+					_.mkdir(_.pathinfo(path).dirname);
+				}
+				if (charset) {
+					data = getIconv().encode(data, charset);
+				}
+				if (append) {
+					fs.appendFileSync(path, data, null);
+				} else {
+					fs.writeFileSync(path, data, null);
 				}
 			}
 		}
