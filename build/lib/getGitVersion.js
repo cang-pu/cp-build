@@ -41,8 +41,9 @@
 			log.stdout.on('data', function(data) {
 				deferred.resolve(data.toString());
 			});
-			log.on('error', function() {
-				var err = '\r\n\r\n' +
+			log.on('error', function(error) {
+				$.debug && (console.log(error));
+				var errInfo = '\r\n\r\n' +
 					chalk.red.bold('SBSBSB ----------------------- SBSBSB') + '\r\n' +
 					chalk.red.bold('****** 请将Git加入系统环境变量 ******') + '\r\n' +
 					chalk.red.bold('****** 如果没有安装Git，请安装 ******') + '\r\n' +
@@ -50,7 +51,7 @@
 					chalk.red.bold('****** 还有，确保本项目处于git ******') + '\r\n' +
 					chalk.red.bold('****** 版本控制中              ******') + '\r\n' +
 					chalk.red.bold('SBSBSB ----------------------- SBSBSB');
-				deferred.reject(err);
+				deferred.reject(errInfo);
 			});
 			log.on('close', function(code) {
 				console.log('检测版本子进程已退出');
@@ -62,7 +63,7 @@
 			var successHandler = function(data) {
 				$.version = data.match($.opt.logStrRegexp)[0];
 				//记录版本号到 .version 文件中
-				exec("echo " + $.version + " > .version");
+				exec("echo " + $.version + " > ./../.version");
 
 				$.version = $.version.substring(0, $.opt.versionLength || 40);
 

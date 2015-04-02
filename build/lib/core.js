@@ -30,7 +30,7 @@
         var path = require('path');
 
         function $() {};
-
+        $.debug=false;
         $.version = 'none version';
         //default option
         $.opt = {

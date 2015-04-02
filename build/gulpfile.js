@@ -29,6 +29,7 @@ $.getGitVersion = require('./lib/getGitVersion');
 
 $.configPath = require('path').join(__dirname, "./conf.js");
 $.init();
+$.debug=true;
 
 gulp.task('version', function() {
 	$.getGitVersion();
